@@ -37,7 +37,11 @@ public class SubscriberInitializerTest {
 
 	@Test
 	public void testJson() {
-		// System.out.println(readFile("../sub-test/src/test/resources/il/ac/technion/cs/sd/sub/test/small.json"));
+		SubscriberInitializerImpl init = new SubscriberInitializerImpl();
+		init.setupJson(readFile("../sub-test/src/test/resources/il/ac/technion/cs/sd/sub/test/small.json"));
+		assertEquals(init.getJournals().size(), 1);
+		assertEquals(init.getSubscribers().size(), 1);
+		assertEquals(init.getCancels().size(), 1);
 	}
 
 }

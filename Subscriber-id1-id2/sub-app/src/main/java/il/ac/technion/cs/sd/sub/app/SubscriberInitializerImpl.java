@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class SubscriberInitializerImpl implements SubscriberInitializer {
 
 	Map<String, String> journals = new HashMap<>();
@@ -29,10 +33,39 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 
 	@Override
 	public CompletableFuture<Void> setupJson(String jsonData) {
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj;
+		try {
+			obj = new JSONObject(jsonData.replace("[", "{ \"arr\":[").replaceAll("]", "]}"));
+			final JSONArray arr = obj.getJSONArray("arr");
+			for (int i = 0; i < arr.length(); i++) {
+				String type = ((JSONObject) arr.get(i)).getString("type");
+				String userId = "";
+				String journalId = "";
+				String price = "";
+				if (type.equals("cancel")) {
+					userId = ((JSONObject) arr.get(i)).getString("user-id");
+					journalId = ((JSONObject) arr.get(i)).getString("journal-id");
+					cancels.put(userId, journalId);
+				}
+				if (type.equals("subscription")) {
+					userId = ((JSONObject) arr.get(i)).getString("user-id");
+					journalId = ((JSONObject) arr.get(i)).getString("journal-id");
+					subscribers.put(userId, journalId);
+				}
+				if (type.equals("journal")) {
+					journalId = ((JSONObject) arr.get(i)).getString("journal-id");
+					price = ((JSONObject) arr.get(i)).getString("price");
+					journals.put(journalId, price);
+				}
+			}
+
+			return null;
+		} catch (Exception e) {
+			throw new RuntimeException();
+		}
+
 	}
-	
+
 	public Map<String, String> getJournals() {
 		return journals;
 	}
