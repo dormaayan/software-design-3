@@ -8,6 +8,8 @@ import java.util.Scanner;
 
 import org.junit.Test;
 
+import il.ac.technion.cs.sd.sub.app.SubscriberInitializerImpl;
+
 public class SubscriberInitializerTest {
 
 	private static String readFile(String fileName) {
@@ -25,12 +27,17 @@ public class SubscriberInitializerTest {
 
 	@Test
 	public void testCSV() {
-		System.out.println(readFile("../sub-test/src/test/resources/il/ac/technion/cs/sd/sub/test/small.csv"));
+		SubscriberInitializerImpl init = new SubscriberInitializerImpl();
+		init.setupCsv(readFile("../sub-test/src/test/resources/il/ac/technion/cs/sd/sub/test/small.csv"));
+		assertEquals(init.getJournals().size(), 1);
+		assertEquals(init.getSubscribers().size(), 2);
+		assertEquals(init.getCancels().size(), 1);
+
 	}
 
 	@Test
 	public void testJson() {
-		System.out.println(readFile("../sub-test/src/test/resources/il/ac/technion/cs/sd/sub/test/small.json"));
+		// System.out.println(readFile("../sub-test/src/test/resources/il/ac/technion/cs/sd/sub/test/small.json"));
 	}
 
 }
