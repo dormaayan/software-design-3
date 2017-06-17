@@ -15,6 +15,7 @@ public class SubscriberReaderImpl implements SubscriberReader {
 
 	IDatabase<String, String> userToCurrentJournals;
 	IDatabase<String, String> userToAllJournals;
+	IDatabase<String, String> userToOnceCancelledJournals;
 	IDatabase<String, String> journalToPrice;
 	IDatabase<String, String> journalToUsers;
 
@@ -44,14 +45,26 @@ public class SubscriberReaderImpl implements SubscriberReader {
 
 	@Override
 	public CompletableFuture<Optional<Boolean>> isCanceled(String userId, String journalId) {
-		// TODO
-		return null;
+		return userToAllJournals.findElementByID(userId).thenCompose(jid -> {
+			if (!jid.isPresent())
+				return CompletableFuture.completedFuture(Optional.empty());
+			return userToCurrentJournals.findElementByID(journalId).thenApply(j -> {
+				if (!j.isPresent())
+					return Optional.of(false);
+				return Optional.of(true);
+			});
+
+		});
 	}
 
 	@Override
 	public CompletableFuture<Optional<Boolean>> wasCanceled(String userId, String journalId) {
-		// TODO Auto-generated method stub
-		return null;
+		return userToOnceCancelledJournals.findElementByID(userId).thenApply(jid -> {
+			if (!jid.isPresent())
+				return Optional.empty();
+			return Optional.of(extractList(jid.get()).contains(journalId));
+
+		});
 	}
 
 	@Override
