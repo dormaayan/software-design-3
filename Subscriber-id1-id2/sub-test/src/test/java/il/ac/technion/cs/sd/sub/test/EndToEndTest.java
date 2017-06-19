@@ -29,7 +29,8 @@ public class EndToEndTest {
         injector.getProvider(FakeFactoryProvider.class).get().get().clean();
     }
 
-    private static String setUpFile(String filename) throws FileNotFoundException {
+    @SuppressWarnings("resource")
+	private static String setUpFile(String filename) throws FileNotFoundException {
         return new Scanner(new File(EndToEndTest.class.getResource(filename).getFile())).useDelimiter("\\Z").next();
     }
 

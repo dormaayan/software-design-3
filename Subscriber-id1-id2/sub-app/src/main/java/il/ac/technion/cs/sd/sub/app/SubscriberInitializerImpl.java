@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SubscriberInitializerImpl implements SubscriberInitializer {
