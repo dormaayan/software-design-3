@@ -2,6 +2,7 @@ package il.ac.technion.cs.sd.sub.app;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,6 +19,9 @@ public class SubscriberReaderImpl implements SubscriberReader {
 	IDatabase<String, String> userToOnceCancelledJournals;
 	IDatabase<String, String> journalToPrice;
 	IDatabase<String, String> journalToUsers;
+
+	IDatabase<String, Map<String, List<Boolean>>> userToJournalHistoryMap;
+	IDatabase<String, Map<String, List<Boolean>>> journalToUserHistoryMap;
 
 	private List<String> extractList(String s) {
 		return Arrays.asList((s.substring(1).substring(0, s.substring(1).length() - 1).split(",")));
@@ -79,8 +83,12 @@ public class SubscriberReaderImpl implements SubscriberReader {
 
 	@Override
 	public CompletableFuture<Map<String, List<Boolean>>> getAllSubscriptions(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		return userToJournalHistoryMap.findElementByID(userId).thenApply(map -> {
+			if (!map.isPresent())
+				return new HashMap<>();
+			return map.get();
+		});
+
 	}
 
 	@Override
@@ -126,8 +134,12 @@ public class SubscriberReaderImpl implements SubscriberReader {
 
 	@Override
 	public CompletableFuture<Map<String, List<Boolean>>> getSubscribers(String journalId) {
-		// TODO Auto-generated method stub
-		return null;
+		return journalToUserHistoryMap.findElementByID(journalId).thenApply(map -> {
+			if (!map.isPresent())
+				return new HashMap<>();
+			return map.get();
+		});
+
 	}
 
 }

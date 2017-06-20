@@ -7,11 +7,21 @@ import java.util.concurrent.CompletableFuture;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import databaseInterfaces.IDatabase;
+
 public class SubscriberInitializerImpl implements SubscriberInitializer {
 
 	Map<String, String> journals = new HashMap<>();
 	Map<String, String> subscribers = new HashMap<>();
 	Map<String, String> cancels = new HashMap<>();
+	
+	
+	//The actual real data structures
+	IDatabase<String, String> userToCurrentJournals;
+	IDatabase<String, String> userToAllJournals;
+	IDatabase<String, String> userToOnceCancelledJournals;
+	IDatabase<String, String> journalToPrice;
+	IDatabase<String, String> journalToUsers;
 
 	@Override
 	public CompletableFuture<Void> setupCsv(String csvData) {
@@ -26,7 +36,7 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 				cancels.put(data[1], data[2]);
 
 		}
-
+		initalStructures();
 		return null;
 	}
 
@@ -57,7 +67,7 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 					journals.put(journalId, price);
 				}
 			}
-
+			initalStructures();
 			return null;
 		} catch (Exception e) {
 			throw new RuntimeException();
@@ -65,16 +75,23 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 
 	}
 
+	//For tests only
 	public Map<String, String> getJournals() {
 		return journals;
 	}
 
+	//For tests only
 	public Map<String, String> getSubscribers() {
 		return subscribers;
 	}
 
+	//For tests only
 	public Map<String, String> getCancels() {
 		return cancels;
+	}
+	
+	private void initalStructures(){
+		
 	}
 
 }
