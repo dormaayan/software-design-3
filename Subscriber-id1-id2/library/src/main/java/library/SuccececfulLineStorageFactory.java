@@ -4,7 +4,6 @@ import java.util.concurrent.CompletableFuture;
 
 import com.google.inject.Inject;
 
-import il.ac.technion.cs.sd.sub.ext.FutureLineStorage;
 import il.ac.technion.cs.sd.sub.ext.FutureLineStorageFactory;
 
 public class SuccececfulLineStorageFactory {

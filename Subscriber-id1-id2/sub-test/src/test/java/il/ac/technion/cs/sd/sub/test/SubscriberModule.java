@@ -1,12 +1,10 @@
 package il.ac.technion.cs.sd.sub.test;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
-import com.google.common.base.Function;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
@@ -30,6 +28,11 @@ public class SubscriberModule extends AbstractModule {
 		bind(SubscriberReader.class).to(SubscriberReaderImpl.class);
 	}
 
+	private static IDatabase<String, List<JournalRegistration>> userToJournals;
+	private static IDatabase<String, JournalInfo> journals;
+	private static IDatabase<String, Map<String, List<Boolean>>> userToJournalHistoryMap;
+	private static IDatabase<String, Map<String, List<Boolean>>> journalToUserHistoryMap;
+
 	public class StringFactory implements IStringableFactory<String> {
 		@Override
 		public CompletableFuture<String> createObject(CompletableFuture<String> s) {
@@ -40,57 +43,64 @@ public class SubscriberModule extends AbstractModule {
 		public CompletableFuture<String> createString(CompletableFuture<String> e) {
 			return e;
 		}
-
-	}
-
-	public class ListFactory<T> implements IStringableFactory<List<T>> {
-		final Function<String, T> parser;
-		final Function<T, String> serializer;
-
-		public ListFactory(Function<String, T> parser, Function<T, String> serializer) {
-			this.parser = parser;
-			this.serializer = serializer;
-		}
-
-		@Override
-		public CompletableFuture<List<T>> createObject(CompletableFuture<String> s) {
-			return s.thenApply(str -> Arrays.asList(str.split(";"))//
-					.stream().map(string -> parser.apply(string)).collect(Collectors.toList()));
-		}
-
-		@Override
-		public CompletableFuture<String> createString(CompletableFuture<List<T>> e) {
-			return e.thenApply(lst -> lst.stream().map(t -> serializer.apply(t))//
-					.reduce("", (s1, s2) -> s1 + ";" + s2));
-		}
-
 	}
 
 	@Provides
 	@Named("userToJournals")
 	protected IDatabase<String, List<JournalRegistration>> userToJournalsProvider(SuccececfulLineStorageFactory f)
 			throws InterruptedException, ExecutionException {
-		return new Database<String, List<JournalRegistration>>(f.open("userToJournals keys").get(),
-				f.open("userToJournals values").get(), //
-				new StringFactory(), new ListFactory<>(JournalRegistration::parse, JournalRegistration::serialize));
+		return userToJournals != null ? userToJournals//
+				: (userToJournals = new Database<>(//
+						f.open("userToJournals keys").get()//
+						, f.open("userToJournals values").get()//
+						, new StringFactory()//
+						, new ListFactory<>(JournalRegistration::parse, JournalRegistration::serialize)));
 	}
 
 	@Provides
 	@Named("journals")
 	protected IDatabase<String, JournalInfo> journalsProvider(SuccececfulLineStorageFactory f)
 			throws InterruptedException, ExecutionException {
-		return new Database<String, JournalInfo>(f.open("userToJournals keys").get(),
-				f.open("userToJournals values").get(), //
-				new StringFactory(), new IStringableFactory<JournalInfo>() {
-					@Override
-					public CompletableFuture<JournalInfo> createObject(CompletableFuture<String> s) {
-						return s.thenApply(JournalInfo::parse);
-					}
-					@Override
-					public CompletableFuture<String> createString(CompletableFuture<JournalInfo> e) {
-						return e.thenApply(JournalInfo::serialize);
-					}
-				});
+		return journals != null ? journals//
+				: (journals = new Database<>(f.open("journals keys").get()//
+						, f.open("journals values").get()//
+						, new StringFactory()//
+						, new IStringableFactory<JournalInfo>() {
+							@Override
+							public CompletableFuture<JournalInfo> createObject(CompletableFuture<String> s) {
+								return s.thenApply(JournalInfo::parse);
+							}
+
+							@Override
+							public CompletableFuture<String> createString(CompletableFuture<JournalInfo> e) {
+								return e.thenApply(JournalInfo::serialize);
+							}
+						}//
+				));
+	}
+
+	@Provides
+	@Named("userToJournalHistoryMap")
+	protected IDatabase<String, Map<String, List<Boolean>>> userToJournalHistoryMapProvider(
+			SuccececfulLineStorageFactory f) throws InterruptedException, ExecutionException {
+		return userToJournalHistoryMap != null ? userToJournalHistoryMap//
+				: (userToJournalHistoryMap = new Database<String, Map<String, List<Boolean>>>(//
+						f.open("userToJournalHistoryMap keys").get()//
+						, f.open("userToJournalHistoryMap values").get()//
+						, new StringFactory()//
+						, new MapFactory<>(s -> s, s -> s, s -> s.equals("t"), b -> b ? "t" : "")));
+	}
+
+	@Provides
+	@Named("journalToUserHistoryMap")
+	protected IDatabase<String, Map<String, List<Boolean>>> journalToUserHistoryMapProvider(
+			SuccececfulLineStorageFactory f) throws InterruptedException, ExecutionException {
+		return journalToUserHistoryMap != null ? journalToUserHistoryMap : //
+				(journalToUserHistoryMap = new Database<String, Map<String, List<Boolean>>>(//
+						f.open("journalToUserHistoryMap keys").get()//
+						, f.open("journalToUserHistoryMap values").get()//
+						, new StringFactory()//
+						, new MapFactory<>(s -> s, s -> s, s -> s.equals("t"), b -> b ? "t" : "")));
 	}
 
 }
