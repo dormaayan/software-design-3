@@ -7,7 +7,8 @@ public class JournalRegistration {
 	private final String journalID;
 	private final int price;
 
-	public JournalRegistration(boolean isRegistered, boolean wasRegistered, boolean wasCanceled, String journalID, int price) {
+	public JournalRegistration(boolean isRegistered, boolean wasRegistered, boolean wasCanceled, String journalID,
+			int price) {
 		this.isSubscribed = isRegistered;
 		this.wasSubscribed = wasRegistered;
 		this.wasCanceled = wasCanceled;
@@ -29,7 +30,7 @@ public class JournalRegistration {
 	public boolean isSubscribed() {
 		return isSubscribed;
 	}
-	
+
 	public boolean wasSubscribed() {
 		return wasSubscribed;
 	}
@@ -41,7 +42,7 @@ public class JournalRegistration {
 	public String getJournalID() {
 		return journalID;
 	}
-	
+
 	public int getPrice() {
 		return price;
 	}
@@ -67,6 +68,19 @@ public class JournalRegistration {
 		if (wasSubscribed != other.wasSubscribed)
 			return false;
 		return true;
+	}
+
+	public String serialize() {
+		String status = isSubscribed() ? "s" : "";
+		status += wasSubscribed() ? "w" : "";
+		status += wasCanceled() ? "c" : "";
+		return getJournalID() + "," + status + "," + getPrice();
+	}
+
+	public static JournalRegistration parse(String s) {
+		String[] ss = s.split(",");
+		return new JournalRegistration(ss[1].contains("s"), ss[1].contains("w")//
+				, ss[1].contains("c"), ss[0], Integer.parseInt(ss[2]));
 	}
 
 }

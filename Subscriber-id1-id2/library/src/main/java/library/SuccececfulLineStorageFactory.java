@@ -15,9 +15,9 @@ public class SuccececfulLineStorageFactory {
 		this.factory = factory;
 	}
 
-	public CompletableFuture<FutureLineStorage> open(String name) {
+	public CompletableFuture<SuccecefulLineStorage> open(String name) {
 		return factory.open(name).thenCompose(o -> !o.isPresent() ? open(name)//
-				: CompletableFuture.completedFuture(o.get()));
+				: CompletableFuture.completedFuture(new SuccecefulLineStorage(o.get())));
 	}
 
 }
