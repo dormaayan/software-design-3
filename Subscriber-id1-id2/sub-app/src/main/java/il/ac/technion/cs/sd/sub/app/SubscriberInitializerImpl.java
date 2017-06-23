@@ -5,10 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import databaseImplementations.DataBaseElement;
 import databaseInterfaces.IDatabase;
 
 public class SubscriberInitializerImpl implements SubscriberInitializer {
@@ -141,10 +143,26 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 			journalToUserHistoryMapPre.get(journalId).get(userId).add(false);
 
 		}
-
 	}
 
 	private void initalStructures() {
+		journals.add(journalsPre.entrySet().stream()
+				.map(entry -> new DataBaseElement<String, JournalInfo>(entry.getKey(), entry.getValue()))
+				.collect(Collectors.toList()));
+
+		userToJournals.add(userToJournalsPre.entrySet().stream()
+				.map(entry -> new DataBaseElement<String, List<JournalRegistration>>(entry.getKey(),
+						(new ArrayList<JournalRegistration>(entry.getValue().values()).stream()
+								.filter(o -> journalsPre.containsKey(o.getJournalID())).collect(Collectors.toList()))))
+				.collect(Collectors.toList()));
+
+		userToJournalHistoryMap.add(userToJournalHistoryMapPre.entrySet().stream()
+				.map(entry -> new DataBaseElement<String, Map<String, List<Boolean>>>(entry.getKey(), entry.getValue()))
+				.collect(Collectors.toList()));
+
+		journalToUserHistoryMap.add(journalToUserHistoryMapPre.entrySet().stream()
+				.map(entry -> new DataBaseElement<String, Map<String, List<Boolean>>>(entry.getKey(), entry.getValue()))
+				.collect(Collectors.toList()));
 
 	}
 
