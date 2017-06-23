@@ -13,9 +13,9 @@ import databaseInterfaces.IDatabase;
 
 public class SubscriberReaderImpl implements SubscriberReader {
 
+	//The databases
 	IDatabase<String, List<JournalRegistration>> userToJournals;
 	IDatabase<String, JournalInfo> journals;
-
 	IDatabase<String, Map<String, List<Boolean>>> userToJournalHistoryMap;
 	IDatabase<String, Map<String, List<Boolean>>> journalToUserHistoryMap;
 

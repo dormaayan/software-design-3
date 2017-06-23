@@ -1,11 +1,11 @@
 package il.ac.technion.cs.sd.sub.app;
 
 public class JournalRegistration {
-	private final boolean isSubscribed;
-	private final boolean wasSubscribed;
-	private final boolean wasCanceled;
+	private boolean isSubscribed;
+	private boolean wasSubscribed;
+	private boolean wasCanceled;
 	private final String journalID;
-	private final int price;
+	private int price;
 
 	public JournalRegistration(boolean isRegistered, boolean wasRegistered, boolean wasCanceled, String journalID,
 			int price) {
@@ -14,6 +14,28 @@ public class JournalRegistration {
 		this.wasCanceled = wasCanceled;
 		this.journalID = journalID;
 		this.price = price;
+	}
+
+	public JournalRegistration(String journalID) {
+		this.isSubscribed = true;
+		this.wasSubscribed = true;
+		this.wasCanceled = false;
+		this.journalID = journalID;
+	}
+
+	public JournalRegistration(String journalID, boolean isSunscribed) {
+		if (!isSunscribed) {
+			this.isSubscribed = false;
+			this.wasSubscribed = false;
+			this.wasCanceled = true;
+		} else {
+			this.isSubscribed = true;
+			this.wasSubscribed = true;
+			this.wasCanceled = false;
+		}
+
+		this.journalID = journalID;
+
 	}
 
 	@Override
@@ -45,6 +67,21 @@ public class JournalRegistration {
 
 	public int getPrice() {
 		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
+	public void cancell() {
+		this.wasCanceled = true;
+		this.isSubscribed = false;
+		this.wasSubscribed = true;
+	}
+
+	public void reSubscribed() {
+		this.wasCanceled = true;
+		this.isSubscribed = true;
 	}
 
 	@Override
