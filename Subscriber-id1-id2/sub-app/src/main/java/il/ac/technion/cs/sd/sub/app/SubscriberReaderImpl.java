@@ -9,15 +9,29 @@ import java.util.OptionalInt;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 import databaseInterfaces.IDatabase;
 
 public class SubscriberReaderImpl implements SubscriberReader {
 
-	//The databases
+	// The databases
 	IDatabase<String, List<JournalRegistration>> userToJournals;
 	IDatabase<String, JournalInfo> journals;
 	IDatabase<String, Map<String, List<Boolean>>> userToJournalHistoryMap;
 	IDatabase<String, Map<String, List<Boolean>>> journalToUserHistoryMap;
+
+	@Inject
+	public SubscriberReaderImpl(@Named("userToJournals") IDatabase<String, List<JournalRegistration>> userToJournals, //
+			@Named("journals") IDatabase<String, JournalInfo> journals, //
+			@Named("userToJournalHistoryMap") IDatabase<String, Map<String, List<Boolean>>> userToJournalHistoryMap, //
+			@Named("journalToUserHistoryMap") IDatabase<String, Map<String, List<Boolean>>> journalToUserHistoryMap) {
+		this.userToJournals = userToJournals;
+		this.journals = journals;
+		this.userToJournalHistoryMap = userToJournalHistoryMap;
+		this.journalToUserHistoryMap = journalToUserHistoryMap;
+	}
 
 	private CompletableFuture<Optional<JournalRegistration>> findRegistrationToJournal(String userId,
 			String journalId) {

@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 import databaseImplementations.DataBaseElement;
 import databaseInterfaces.IDatabase;
 
@@ -26,6 +29,18 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 	IDatabase<String, JournalInfo> journals;
 	IDatabase<String, Map<String, List<Boolean>>> userToJournalHistoryMap;
 	IDatabase<String, Map<String, List<Boolean>>> journalToUserHistoryMap;
+
+	@Inject
+	public SubscriberInitializerImpl(
+			@Named("userToJournals") IDatabase<String, List<JournalRegistration>> userToJournals, //
+			@Named("journals") IDatabase<String, JournalInfo> journals, //
+			@Named("userToJournalHistoryMap") IDatabase<String, Map<String, List<Boolean>>> userToJournalHistoryMap, //
+			@Named("journalToUserHistoryMap") IDatabase<String, Map<String, List<Boolean>>> journalToUserHistoryMap) {
+		this.userToJournals = userToJournals;
+		this.journals = journals;
+		this.userToJournalHistoryMap = userToJournalHistoryMap;
+		this.journalToUserHistoryMap = journalToUserHistoryMap;
+	}
 
 	@Override
 	public CompletableFuture<Void> setupCsv(String csvData) {
