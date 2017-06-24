@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -22,8 +23,8 @@ import static org.hamcrest.Matchers.*;
 public class EndToEndTest {
 	static Injector injector;
 
-//	@Rule
-//	public Timeout globalTimeout = Timeout.seconds(30);
+	@Rule
+	public Timeout globalTimeout = Timeout.seconds(30);
 
 	@After
 	public void tearDown() throws Exception {
@@ -58,6 +59,8 @@ public class EndToEndTest {
 	public void userSubscribedToInvalidJournalShouldHaveNoSubscriptions() throws Exception {
 		setUp("ourSmall.csv");
 		SubscriberReader reader = injector.getInstance(SubscriberReader.class);
+		@SuppressWarnings("unused")
+		CompletableFuture<Map<String,List<Boolean>>> m = reader.getAllSubscriptions("u6");
 		assertThat(reader.getAllSubscriptions("u6").get().entrySet(), empty());
 	}
 

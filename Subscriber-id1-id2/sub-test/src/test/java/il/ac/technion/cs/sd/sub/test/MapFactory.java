@@ -1,6 +1,7 @@
 package il.ac.technion.cs.sd.sub.test;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -24,10 +25,15 @@ public class MapFactory<K, V> implements IStringableFactory<Map<K, List<V>>> {
 
 	@Override
 	public CompletableFuture<Map<K, List<V>>> createObject(CompletableFuture<String> e) {
-		return e.thenApply(s -> Arrays.asList(s.split("/")).stream()//
-				.map(str -> str.split(";", 2))//
-				.collect(Collectors.toMap(ss -> keyParser.apply(ss[0])//
-						, ss -> valueListFactory.createObject(ss[1]))));
+		return e.thenApply(s -> {
+			if (s.equals("/none;;t;"))
+				return new HashMap<>();
+			return Arrays.asList(s.split("/")).stream()//
+					.map(str -> str.split(";", 2))//
+					.collect(Collectors.toMap(ss -> keyParser.apply(ss[0])//
+			, ss -> valueListFactory.createObject(ss[0])));
+		});
+
 	}
 
 	@Override

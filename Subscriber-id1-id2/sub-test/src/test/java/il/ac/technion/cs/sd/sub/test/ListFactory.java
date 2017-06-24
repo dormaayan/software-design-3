@@ -1,5 +1,6 @@
 package il.ac.technion.cs.sd.sub.test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -19,10 +20,14 @@ public class ListFactory<T> implements IStringableFactory<List<T>> {
 	}
 
 	public List<T> createObject(String str) {
+		if (str.equals("") || str == null)
+			return new ArrayList<>();
+
 		return Arrays.asList(str.split(";"))//
-				.stream().map(string -> parser.apply(string)).collect(Collectors.toList());
+				.stream().filter(string -> !string.equals("")).map(string -> parser.apply(string))
+				.collect(Collectors.toList());
 	}
-	
+
 	@Override
 	public CompletableFuture<List<T>> createObject(CompletableFuture<String> s) {
 		return s.thenApply(str -> createObject(str));

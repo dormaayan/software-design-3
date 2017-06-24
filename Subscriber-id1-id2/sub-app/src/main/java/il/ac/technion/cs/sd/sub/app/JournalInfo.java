@@ -1,5 +1,6 @@
 package il.ac.technion.cs.sd.sub.app;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,16 +48,16 @@ public class JournalInfo {
 			return false;
 		return true;
 	}
-	
-	public static JournalInfo parse(String s){
-		List<String> ss = Arrays.asList(s.split(";"));
+
+	public static JournalInfo parse(String s) {
+		List<String> ss = new ArrayList<>(Arrays.asList(s.split(";")));
 		String price = ss.get(0);
 		ss.remove(0);
 		return new JournalInfo(Integer.parseInt(price), ss);
 	}
-	
+
 	public String serialize() {
-		return getPrice() + getUsers().stream().reduce("", (s1,s2)->s1 + ";" + s2); 
+		return getPrice() + getUsers().stream().reduce("", (s1, s2) -> s1 + ";" + s2);
 	}
 
 }

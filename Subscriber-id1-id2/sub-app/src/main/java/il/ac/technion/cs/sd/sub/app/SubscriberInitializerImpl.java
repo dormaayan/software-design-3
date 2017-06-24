@@ -167,8 +167,14 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 
 		userToJournals.add(userToJournalsPre.entrySet().stream()
 				.map(entry -> new DataBaseElement<String, List<JournalRegistration>>(entry.getKey(),
-						(new ArrayList<JournalRegistration>(entry.getValue().values()).stream()
-								.filter(o -> journalsPre.containsKey(o.getJournalID())).collect(Collectors.toList()))))
+						(new ArrayList<JournalRegistration>(entry.getValue().values()).stream().filter(o -> {
+							if (!journalsPre.containsKey(o.getJournalID()))
+								return false;
+							o.setPrice(journalsPre.get((o.getJournalID())).getPrice());
+							return true;
+						})
+
+								.collect(Collectors.toList()))))
 				.collect(Collectors.toList()));
 
 		userToJournalHistoryMap.add(userToJournalHistoryMapPre.entrySet().stream()
