@@ -85,13 +85,14 @@ public class SubscriberReaderImpl implements SubscriberReader {
 	@Override
 	public CompletableFuture<OptionalInt> getMonthlyBudget(String userId) {
 		return getSubscritions(userId).thenApply(lst -> lst.stream()//
-				.mapToInt(jr -> jr.getPrice()).reduce(Integer::sum));
+				.mapToInt(jr -> jr.isSubscribed() ? jr.getPrice() : 0).reduce(Integer::sum));
 	}
 
 	@Override
 	public CompletableFuture<List<String>> getSubscribedUsers(String journalId) {
 		return journals.findElementByID(journalId)//
-				.thenApply(o -> o.map(jd -> jd.getUsers()).orElse(new ArrayList<String>()));
+				.thenApply(o -> o.map(jd -> jd.getUsers().stream().sorted().collect(Collectors.toList()))
+						.orElse(new ArrayList<String>()));
 	}
 
 	// the price of the journal * numberOfSubscriber

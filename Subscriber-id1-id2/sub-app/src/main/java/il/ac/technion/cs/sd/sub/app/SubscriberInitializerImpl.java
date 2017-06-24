@@ -110,6 +110,11 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 	}
 
 	private void subscribeJournal(String userId, String journalId) {
+
+		if (journalsPre.containsKey(journalId)) {
+			journalsPre.get(journalId).getUsers().add(userId);
+		}
+
 		if (userToJournalsPre.get(userId) == null)
 			userToJournalsPre.put(userId, new HashMap<>());
 
@@ -133,6 +138,11 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 	}
 
 	private void unsubscribeJournal(String userId, String journalId) {
+
+		if (journalsPre.containsKey(journalId))
+			for (int i = 0; i < journalsPre.get(journalId).getUsers().size(); i++)
+				if (journalsPre.get(journalId).getUsers().get(i).equals(userId))
+					journalsPre.get(journalId).getUsers().remove(i);
 
 		if (userToJournalsPre.get(userId) == null) {
 			userToJournalsPre.put(userId, new HashMap<>());
@@ -161,14 +171,14 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 	}
 
 	private void initalStructures() {
-		journals.add(journalsPre.entrySet().stream()
+		journals.add(journalsPre.entrySet().stream().distinct()
 				.map(entry -> new DataBaseElement<String, JournalInfo>(entry.getKey(), entry.getValue()))
 				.collect(Collectors.toList()));
 
 		userToJournals.add(userToJournalsPre.entrySet().stream()
 				.map(entry -> new DataBaseElement<String, List<JournalRegistration>>(entry.getKey(),
 						(new ArrayList<JournalRegistration>(entry.getValue().values()).stream().filter(o -> {
-							if (!journalsPre.containsKey(o.getJournalID()))
+							if (!journalsPre.containsKey(o.getJournalID()) || !o.isSubscribed())
 								return false;
 							o.setPrice(journalsPre.get((o.getJournalID())).getPrice());
 							return true;
