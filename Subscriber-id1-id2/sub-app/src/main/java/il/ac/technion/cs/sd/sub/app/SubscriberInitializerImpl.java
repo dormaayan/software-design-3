@@ -116,16 +116,17 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 		if (userToJournalHistoryMapPre.get(userId) == null)
 			userToJournalHistoryMapPre.put(userId, new HashMap<>());
 
-		if (journalToUserHistoryMapPre.get(userId) == null)
-			journalToUserHistoryMapPre.put(userId, new HashMap<>());
+		if (journalToUserHistoryMapPre.get(journalId) == null)
+			journalToUserHistoryMapPre.put(journalId, new HashMap<>());
 
 		if (userToJournalHistoryMapPre.get(userId).get(journalId) == null)
 			userToJournalHistoryMapPre.get(userId).put(journalId, new ArrayList<>());
 
-		if (journalToUserHistoryMapPre.get(userId).get(journalId) == null)
-			journalToUserHistoryMapPre.get(userId).put(journalId, new ArrayList<>());
+		if (journalToUserHistoryMapPre.get(journalId).get(userId) == null)
+			journalToUserHistoryMapPre.get(journalId).put(userId, new ArrayList<>());
 
 		userToJournalsPre.get(userId).put(journalId, new JournalRegistration(journalId));
+
 		userToJournalHistoryMapPre.get(userId).get(journalId).add(true);
 		journalToUserHistoryMapPre.get(journalId).get(userId).add(true);
 
@@ -136,27 +137,26 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 		if (userToJournalsPre.get(userId) == null) {
 			userToJournalsPre.put(userId, new HashMap<>());
 			userToJournalsPre.get(userId).put(journalId, new JournalRegistration(journalId, false));
-		} else {
+		} else if (userToJournalsPre.get(userId).get(journalId) != null) {
 			userToJournalsPre.get(userId).get(journalId).cancell();
 		}
 
 		if (userToJournalHistoryMapPre.get(userId) == null)
 			userToJournalHistoryMapPre.put(userId, new HashMap<>());
 
-		if (journalToUserHistoryMapPre.get(userId) == null)
-			journalToUserHistoryMapPre.put(userId, new HashMap<>());
+		if (journalToUserHistoryMapPre.get(journalId) == null)
+			journalToUserHistoryMapPre.put(journalId, new HashMap<>());
 
 		if (userToJournalHistoryMapPre.get(userId).get(journalId) == null)
 			userToJournalHistoryMapPre.get(userId).put(journalId, new ArrayList<>());
 
-		if (journalToUserHistoryMapPre.get(userId).get(journalId) == null)
-			journalToUserHistoryMapPre.get(userId).put(journalId, new ArrayList<>());
+		if (journalToUserHistoryMapPre.get(journalId).get(userId) == null)
+			journalToUserHistoryMapPre.get(journalId).put(userId, new ArrayList<>());
 
 		List<Boolean> history = userToJournalHistoryMapPre.get(userId).get(journalId);
 		if (history.size() != 0 && history.get(history.size() - 1) != false) {
 			userToJournalHistoryMapPre.get(userId).get(journalId).add(false);
 			journalToUserHistoryMapPre.get(journalId).get(userId).add(false);
-
 		}
 	}
 

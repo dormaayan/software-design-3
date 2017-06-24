@@ -13,6 +13,7 @@ import org.junit.rules.Timeout;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -21,31 +22,18 @@ import static org.hamcrest.Matchers.*;
 public class EndToEndTest {
 	static Injector injector;
 
-	@Rule
-	public Timeout globalTimeout = Timeout.seconds(30);
+//	@Rule
+//	public Timeout globalTimeout = Timeout.seconds(30);
 
 	@After
 	public void tearDown() throws Exception {
 		injector.getProvider(FakeFactoryProvider.class).get().get().clean();
 	}
 
-	private static String readFile(String fileName) {
-		Scanner scanner;
-		try {
-			scanner = new Scanner(new File(fileName));
-		} catch (FileNotFoundException e) {
-			return "";
-
-		}
-		String text = scanner.useDelimiter("\\A").next();
-		scanner.close();
-		return text;
-	}
-
-	@SuppressWarnings({ "all" })
+	@SuppressWarnings("resource")
 	private static String setUpFile(String filename) throws FileNotFoundException {
-
-		return readFile(filename);
+		URL r = EndToEndTest.class.getResource(filename);
+		return new Scanner(new File(EndToEndTest.class.getResource(filename).getFile())).useDelimiter("\\Z").next();
 	}
 
 	public static void setUp(String fileName) throws Exception {
@@ -60,8 +48,8 @@ public class EndToEndTest {
 	}
 
 	@Test
-	public void t1() throws Exception {
-		setUp("/sub-test/src/test/resources/ourSmall.csv");
+	public void userNotFoundShouldHaveNoSubscriptions() throws Exception {
+		setUp("ourSmall.csv");
 		SubscriberReader reader = injector.getInstance(SubscriberReader.class);
 		assertThat(reader.getAllSubscriptions("none").get().entrySet(), empty());
 	}
