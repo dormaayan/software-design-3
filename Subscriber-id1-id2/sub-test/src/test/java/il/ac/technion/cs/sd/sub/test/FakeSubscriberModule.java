@@ -21,15 +21,15 @@ import il.ac.technion.cs.sd.sub.app.SubscriberInitializerImpl;
 import il.ac.technion.cs.sd.sub.app.SubscriberReader;
 import il.ac.technion.cs.sd.sub.app.SubscriberReaderImpl;
 import il.ac.technion.cs.sd.sub.ext.FutureLineStorageFactory;
-import il.ac.technion.cs.sd.sub.test.SubscriberModule.StringFactory;
 import library.SuccececfulLineStorageFactory;
+import library.SuccecefulLineStorage;
 
 public class FakeSubscriberModule extends AbstractModule {
 	
-	private static IDatabase<String, List<JournalRegistration>> userToJournals;
-	private static IDatabase<String, JournalInfo> journals;
-	private static IDatabase<String, Map<String, List<Boolean>>> userToJournalHistoryMap;
-	private static IDatabase<String, Map<String, List<Boolean>>> journalToUserHistoryMap;
+//	private static IDatabase<String, List<JournalRegistration>> userToJournals;
+//	private static IDatabase<String, JournalInfo> journals;
+//	private static IDatabase<String, Map<String, List<Boolean>>> userToJournalHistoryMap;
+//	private static IDatabase<String, Map<String, List<Boolean>>> journalToUserHistoryMap;
 
 	
 	@Override
@@ -43,21 +43,23 @@ public class FakeSubscriberModule extends AbstractModule {
 	@Named("userToJournals")
 	protected IDatabase<String, List<JournalRegistration>> userToJournalsProvider(SuccececfulLineStorageFactory f)
 			throws InterruptedException, ExecutionException {
-		return userToJournals != null ? userToJournals//
-				: (userToJournals = new Database<>(//
-						f.open("userToJournals keys").get()//
-						, f.open("userToJournals values").get()//
+		CompletableFuture<SuccecefulLineStorage> open = f.open("userToJournals keys");
+		CompletableFuture<SuccecefulLineStorage> open2 = f.open("userToJournals values");
+		return new Database<>(//
+						open.get()//
+						, open2.get()//
 						, new StringFactory()//
-						, new ListFactory<>(JournalRegistration::parse, JournalRegistration::serialize)));
+						, new ListFactory<>(JournalRegistration::parse, JournalRegistration::serialize));
 	}
 
 	@Provides
 	@Named("journals")
 	protected IDatabase<String, JournalInfo> journalsProvider(SuccececfulLineStorageFactory f)
 			throws InterruptedException, ExecutionException {
-		return journals != null ? journals//
-				: (journals = new Database<>(f.open("journals keys").get()//
-						, f.open("journals values").get()//
+		CompletableFuture<SuccecefulLineStorage> open = f.open("journals keys");
+		CompletableFuture<SuccecefulLineStorage> open2 = f.open("journals values");
+		return new Database<>(open.get()//
+						, open2.get()//
 						, new StringFactory()//
 						, new IStringableFactory<JournalInfo>() {
 							@Override
@@ -70,31 +72,33 @@ public class FakeSubscriberModule extends AbstractModule {
 								return e.thenApply(JournalInfo::serialize);
 							}
 						}//
-				));
+				);
 	}
 
 	@Provides
 	@Named("userToJournalHistoryMap")
 	protected IDatabase<String, Map<String, List<Boolean>>> userToJournalHistoryMapProvider(
 			SuccececfulLineStorageFactory f) throws InterruptedException, ExecutionException {
-		return userToJournalHistoryMap != null ? userToJournalHistoryMap//
-				: (userToJournalHistoryMap = new Database<String, Map<String, List<Boolean>>>(//
-						f.open("userToJournalHistoryMap keys").get()//
-						, f.open("userToJournalHistoryMap values").get()//
+		CompletableFuture<SuccecefulLineStorage> open = f.open("userToJournalHistoryMap keys");
+		CompletableFuture<SuccecefulLineStorage> open2 = f.open("userToJournalHistoryMap values");
+		return new Database<String, Map<String, List<Boolean>>>(//
+						open.get()//
+						, open2.get()//
 						, new StringFactory()//
-						, new MapFactory<>(s -> s, s -> s, s -> s.equals("t"), b -> b ? "t" : "")));
+						, new MapFactory<>(s -> s, s -> s, s -> s.equals("t"), b -> b ? "t" : ""));
 	}
 
 	@Provides
 	@Named("journalToUserHistoryMap")
 	protected IDatabase<String, Map<String, List<Boolean>>> journalToUserHistoryMapProvider(
 			SuccececfulLineStorageFactory f) throws InterruptedException, ExecutionException {
-		return journalToUserHistoryMap != null ? journalToUserHistoryMap : //
-				(journalToUserHistoryMap = new Database<String, Map<String, List<Boolean>>>(//
-						f.open("journalToUserHistoryMap keys").get()//
-						, f.open("journalToUserHistoryMap values").get()//
+		CompletableFuture<SuccecefulLineStorage> open = f.open("journalToUserHistoryMap keys");
+		CompletableFuture<SuccecefulLineStorage> open2 = f.open("journalToUserHistoryMap values");
+		return new Database<String, Map<String, List<Boolean>>>(//
+						open.get()//
+						, open2.get()//
 						, new StringFactory()//
-						, new MapFactory<>(s -> s, s -> s, s -> s.equals("t"), b -> b ? "t" : "")));
+						, new MapFactory<>(s -> s, s -> s, s -> s.equals("t"), b -> b ? "t" : ""));
 	}
 
 	public class StringFactory implements IStringableFactory<String> {
