@@ -26,10 +26,9 @@ public class MapFactory<K, V> implements IStringableFactory<Map<K, List<V>>> {
 	@Override
 	public CompletableFuture<Map<K, List<V>>> createObject(CompletableFuture<String> e) {
 		return e.thenApply(s -> {
-
 			return Arrays.asList(s.split("/")).stream().filter(o -> !o.equals("")).map(str -> str.split(";", 2))//
-					.collect(Collectors.toMap(ss -> keyParser.apply(ss[0])//
-			, ss -> valueListFactory.createObject(ss[0])));
+					.filter(ss -> ss.length!=2).collect(Collectors.toMap(ss -> keyParser.apply(ss[0])//
+			, ss -> valueListFactory.createObject(ss[1])));
 		});
 
 	}

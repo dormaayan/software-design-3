@@ -95,6 +95,7 @@ public class EndToEndTest {
 		setUp("ourSmall.csv");
 		SubscriberReader reader = injector.getInstance(SubscriberReader.class);
 		Map<String, List<Boolean>> user7History = reader.getAllSubscriptions("u7").get();
+		System.out.println(user7History);
 		assertThat(user7History.entrySet(), hasSize(6));
 		assertThat(user7History.get("j1"),
 				IsIterableContainingInOrder.contains(false, true, true, false, true, true, true));
@@ -378,6 +379,7 @@ public class EndToEndTest {
 		setUp("ourSmall.json");
 		SubscriberReader reader = injector.getInstance(SubscriberReader.class);
 		Map<String, List<Boolean>> j4 = reader.getSubscribers("j4").get();
+		System.out.println(j4);
 		assertThat(j4.entrySet(), hasSize(1));
 		assertThat(j4.get("u4"), IsIterableContainingInOrder.contains(false));
 	}

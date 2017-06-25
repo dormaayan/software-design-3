@@ -22,9 +22,8 @@ public class ListFactory<T> implements IStringableFactory<List<T>> {
 	public List<T> createObject(String str) {
 		if (str.equals("") || str == null)
 			return new ArrayList<>();
-
 		return Arrays.asList(str.split(";"))//
-				.stream().filter(string -> !string.equals("")).map(string -> parser.apply(string))
+				.stream().map(string -> parser.apply(string))
 				.collect(Collectors.toList());
 	}
 

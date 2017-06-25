@@ -5,12 +5,28 @@ import java.util.Arrays;
 import java.util.List;
 
 public class JournalInfo {
-	private final int price;
+	private int price;
 	private final List<String> users;
+	private boolean wasDeclared;
 
 	public JournalInfo(int price, List<String> users) {
 		this.price = price;
 		this.users = users;
+		this.wasDeclared = false;
+	}
+
+	public JournalInfo(int price, List<String> users, boolean wasDeclared) {
+		this.price = price;
+		this.users = users;
+		this.wasDeclared = wasDeclared;
+	}
+
+	public boolean wasDeclared() {
+		return this.wasDeclared;
+	}
+
+	public void declare() {
+		this.wasDeclared = true;
 	}
 
 	public int getPrice() {
@@ -58,6 +74,11 @@ public class JournalInfo {
 
 	public String serialize() {
 		return getPrice() + getUsers().stream().reduce("", (s1, s2) -> s1 + ";" + s2);
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+
 	}
 
 }

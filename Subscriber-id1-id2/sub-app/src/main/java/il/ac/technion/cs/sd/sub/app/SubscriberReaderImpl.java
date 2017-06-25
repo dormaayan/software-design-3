@@ -37,7 +37,7 @@ public class SubscriberReaderImpl implements SubscriberReader {
 			String journalId) {
 		return userToJournals.findElementByID(userId)//
 				.thenApply(o -> o.flatMap(lst -> lst.stream()//
-						.filter(jr -> journalId.equals(jr.getJournalID())).findAny()));
+						.filter(jr -> jr!=null && journalId.equals(jr.getJournalID())).findAny()));
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class SubscriberReaderImpl implements SubscriberReader {
 	private CompletableFuture<List<JournalRegistration>> getSubscritions(String userId) {
 		return userToJournals.findElementByID(userId)//
 				.thenApply(o -> o.orElse(new ArrayList<>()).stream()//
-						.filter(jr -> jr.isSubscribed()).collect(Collectors.toList()));
+						.filter(jr -> jr!=null && jr.isSubscribed()).collect(Collectors.toList()));
 	}
 
 	@Override
@@ -79,7 +79,10 @@ public class SubscriberReaderImpl implements SubscriberReader {
 	@Override
 	public CompletableFuture<Map<String, List<Boolean>>> getAllSubscriptions(String userId) {
 		return userToJournalHistoryMap.findElementByID(userId)//
-				.thenApply(map -> map.orElse(new HashMap<>()));
+				.thenApply(map -> {
+					System.out.println(map);
+					return map.orElse(new HashMap<>());
+				});
 	}
 
 	@Override

@@ -21,6 +21,7 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 	// Temporary Structures
 	Map<String, Map<String, JournalRegistration>> userToJournalsPre = new HashMap<>();
 	Map<String, JournalInfo> journalsPre = new HashMap<>();
+	Map<String, JournalInfo> journalsPrePre = new HashMap<>();
 	Map<String, Map<String, List<Boolean>>> userToJournalHistoryMapPre = new HashMap<>();
 	Map<String, Map<String, List<Boolean>>> journalToUserHistoryMapPre = new HashMap<>();
 
@@ -106,12 +107,21 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 	}
 
 	private void addJournal(String id, int price) {
-		journalsPre.put(id, new JournalInfo(price, new ArrayList<>()));
+		if (journalsPre.containsKey(id)) {
+			journalsPre.get(id).declare();
+			journalsPre.get(id).setPrice(price);
+
+		} else {
+			journalsPre.put(id, new JournalInfo(price, new ArrayList<>(), true));
+		}
 	}
 
 	private void subscribeJournal(String userId, String journalId) {
 
 		if (journalsPre.containsKey(journalId)) {
+			journalsPre.get(journalId).getUsers().add(userId);
+		} else {
+			journalsPre.put(journalId, new JournalInfo(0, new ArrayList<>()));
 			journalsPre.get(journalId).getUsers().add(userId);
 		}
 
@@ -131,7 +141,6 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 			journalToUserHistoryMapPre.get(journalId).put(userId, new ArrayList<>());
 
 		userToJournalsPre.get(userId).put(journalId, new JournalRegistration(journalId));
-
 		userToJournalHistoryMapPre.get(userId).get(journalId).add(true);
 		journalToUserHistoryMapPre.get(journalId).get(userId).add(true);
 
@@ -171,14 +180,16 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 	}
 
 	private void initalStructures() {
-		journals.add(journalsPre.entrySet().stream().distinct()
+
+		journals.add(journalsPre.entrySet().stream().distinct().filter(j -> j.getValue().wasDeclared())
 				.map(entry -> new DataBaseElement<String, JournalInfo>(entry.getKey(), entry.getValue()))
 				.collect(Collectors.toList()));
 
 		userToJournals.add(userToJournalsPre.entrySet().stream()
 				.map(entry -> new DataBaseElement<String, List<JournalRegistration>>(entry.getKey(),
 						(new ArrayList<JournalRegistration>(entry.getValue().values()).stream().filter(o -> {
-							if (!journalsPre.containsKey(o.getJournalID()) || !o.isSubscribed())
+							if (!journalsPre.containsKey(o.getJournalID())
+									|| !journalsPre.get(o.getJournalID()).wasDeclared())
 								return false;
 							o.setPrice(journalsPre.get((o.getJournalID())).getPrice());
 							return true;

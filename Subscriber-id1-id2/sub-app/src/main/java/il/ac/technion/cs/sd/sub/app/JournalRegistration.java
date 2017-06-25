@@ -116,6 +116,8 @@ public class JournalRegistration {
 
 	public static JournalRegistration parse(String s) {
 		String[] ss = s.split(",");
+		if(ss.length!=3)
+			return null;
 		return new JournalRegistration(ss[1].contains("s"), ss[1].contains("w")//
 				, ss[1].contains("c"), ss[0], Integer.parseInt(ss[2]));
 	}
