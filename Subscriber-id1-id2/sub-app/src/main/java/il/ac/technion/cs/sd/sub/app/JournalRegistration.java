@@ -1,6 +1,12 @@
 package il.ac.technion.cs.sd.sub.app;
 
 public class JournalRegistration {
+	@Override
+	public String toString() {
+		return "JournalRegistration [isSubscribed=" + isSubscribed + ", wasSubscribed=" + wasSubscribed
+				+ ", wasCanceled=" + wasCanceled + ", journalID=" + journalID + ", price=" + price + "]";
+	}
+
 	private boolean isSubscribed;
 	private boolean wasSubscribed;
 	private boolean wasCanceled;

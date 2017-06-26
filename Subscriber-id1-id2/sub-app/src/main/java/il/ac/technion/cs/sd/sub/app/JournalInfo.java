@@ -5,6 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class JournalInfo {
+	@Override
+	public String toString() {
+		return "JournalInfo [price=" + price + ", users=" + users + ", wasDeclared=" + wasDeclared + "]";
+	}
+
 	private int price;
 	private final List<String> users;
 	private boolean wasDeclared;

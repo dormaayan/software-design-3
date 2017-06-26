@@ -119,10 +119,11 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 	private void subscribeJournal(String userId, String journalId) {
 
 		if (journalsPre.containsKey(journalId)) {
-			journalsPre.get(journalId).getUsers().add(userId);
-		} else {
+			if(!journalsPre.get(journalId).getUsers().contains(userId))
+				journalsPre.get(journalId).getUsers().add(userId);
+			} else {
 			journalsPre.put(journalId, new JournalInfo(0, new ArrayList<>()));
-			journalsPre.get(journalId).getUsers().add(userId);
+				journalsPre.get(journalId).getUsers().add(userId);
 		}
 
 		if (userToJournalsPre.get(userId) == null)
@@ -181,8 +182,8 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 
 	private void initalStructures() {
 		
-		System.out.println("journals:");
-		System.out.println(journalsPre);
+//		System.out.println("journals:");
+//		System.out.println(journalsPre);
 
 		
 
