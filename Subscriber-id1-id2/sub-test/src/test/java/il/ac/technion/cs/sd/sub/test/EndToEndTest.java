@@ -285,7 +285,9 @@ public class EndToEndTest {
 	public void userSubscribedToInvalidJournalShouldHaveNoBudget() throws Exception {
 		setUp("ourSmall.csv");
 		SubscriberReader reader = injector.getInstance(SubscriberReader.class);
-		Assert.assertFalse(reader.getMonthlyBudget("u6").get().isPresent());
+		Assert.assertTrue(reader.getMonthlyBudget("u6").get().isPresent());
+		Assert.assertEquals(0, reader.getMonthlyBudget("u6").get().getAsInt());
+
 	}
 
 	@Test
