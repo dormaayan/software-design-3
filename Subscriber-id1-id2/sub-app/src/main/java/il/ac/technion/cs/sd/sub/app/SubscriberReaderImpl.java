@@ -56,7 +56,7 @@ public class SubscriberReaderImpl implements SubscriberReader {
 	@Override
 	public CompletableFuture<Optional<Boolean>> isCanceled(String userId, String journalId) {
 		return findRegistrationToJournal(userId, journalId)//
-				.thenApply(o -> o.map(jr -> !jr.isSubscribed()));
+				.thenApply(o -> o.map(jr -> !jr.isSubscribed() && jr.wasSubscribed()));
 	}
 
 	@Override
