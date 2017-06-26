@@ -180,6 +180,11 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 	}
 
 	private void initalStructures() {
+		
+		System.out.println("journals:");
+		System.out.println(journalsPre);
+
+		
 
 		journals.add(journalsPre.entrySet().stream().distinct().filter(j -> j.getValue().wasDeclared())
 				.map(entry -> new DataBaseElement<String, JournalInfo>(entry.getKey(), entry.getValue()))
