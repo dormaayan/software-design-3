@@ -98,7 +98,7 @@ public class FakeSubscriberModule extends AbstractModule {
 						open.get()//
 						, open2.get()//
 						, new StringFactory()//
-						, new MapFactory<>(s -> s, s -> s, s -> s.equals("t"), b -> b ? "t" : ""));
+						, new MapFactory<>(s -> s, s -> s, s -> s.equals("t"), b -> b ? "t" : "f"));
 	}
 
 	public class StringFactory implements IStringableFactory<String> {
