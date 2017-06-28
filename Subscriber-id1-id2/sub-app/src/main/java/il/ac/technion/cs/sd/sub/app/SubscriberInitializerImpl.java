@@ -119,11 +119,11 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 	private void subscribeJournal(String userId, String journalId) {
 
 		if (journalsPre.containsKey(journalId)) {
-			if(!journalsPre.get(journalId).getUsers().contains(userId))
+			if (!journalsPre.get(journalId).getUsers().contains(userId))
 				journalsPre.get(journalId).getUsers().add(userId);
-			} else {
+		} else {
 			journalsPre.put(journalId, new JournalInfo(0, new ArrayList<>()));
-				journalsPre.get(journalId).getUsers().add(userId);
+			journalsPre.get(journalId).getUsers().add(userId);
 		}
 
 		if (userToJournalsPre.get(userId) == null)
@@ -138,10 +138,16 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 		if (userToJournalHistoryMapPre.get(userId).get(journalId) == null)
 			userToJournalHistoryMapPre.get(userId).put(journalId, new ArrayList<>());
 
-		if (journalToUserHistoryMapPre.get(journalId).get(userId) == null)
+		if (journalToUserHistoryMapPre.get(journalId).get(userId) == null) {
 			journalToUserHistoryMapPre.get(journalId).put(userId, new ArrayList<>());
+			userToJournalsPre.get(userId).put(journalId, new JournalRegistration(journalId));
+		} else {
+			if (userToJournalsPre.get(userId).get(journalId) != null)
+				userToJournalsPre.get(userId).get(journalId).reSubscribed();
+			else
+				userToJournalsPre.get(userId).put(journalId, new JournalRegistration(journalId));
 
-		userToJournalsPre.get(userId).put(journalId, new JournalRegistration(journalId));
+		}
 		userToJournalHistoryMapPre.get(userId).get(journalId).add(true);
 		journalToUserHistoryMapPre.get(journalId).get(userId).add(true);
 
@@ -174,21 +180,19 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 			journalToUserHistoryMapPre.get(journalId).put(userId, new ArrayList<>());
 
 		List<Boolean> history = userToJournalHistoryMapPre.get(userId).get(journalId);
-		if ((history.size() != 0 && history.get(history.size() - 1) != false) || (history.size() == 0) ) {
+		if ((history.size() != 0 && history.get(history.size() - 1) != false) || (history.size() == 0)) {
 			userToJournalHistoryMapPre.get(userId).get(journalId).add(false);
 			journalToUserHistoryMapPre.get(journalId).get(userId).add(false);
 		}
 	}
 
 	private void initalStructures() {
-		
-//		System.out.println("journals:");
-//		System.out.println(journalsPre);
-		
-//		System.out.println(journalToUserHistoryMapPre.get("j4").get("u4"));
-//		System.out.println("_____________________________________________");
 
-		
+		// System.out.println("journals:");
+		// System.out.println(journalsPre);
+
+		// System.out.println(journalToUserHistoryMapPre.get("j4").get("u4"));
+		// System.out.println("_____________________________________________");
 
 		journals.add(journalsPre.entrySet().stream().distinct().filter(j -> j.getValue().wasDeclared())
 				.map(entry -> new DataBaseElement<String, JournalInfo>(entry.getKey(), entry.getValue()))
@@ -207,11 +211,14 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 								.collect(Collectors.toList()))))
 				.collect(Collectors.toList()));
 
-		userToJournalHistoryMap.add(userToJournalHistoryMapPre.entrySet().stream()
-				.map(entry -> new DataBaseElement<String, Map<String, List<Boolean>>>(entry.getKey(), entry.getValue()))
-				.collect(Collectors.toList()));
+		userToJournalHistoryMap.add(userToJournalHistoryMapPre.entrySet().stream().map(entry -> {
+			return new DataBaseElement<String, Map<String, List<Boolean>>>(entry.getKey(),
+					entry.getValue().entrySet().stream().filter(e -> journalsPre.get(e.getKey())!=null && journalsPre.get(e.getKey()).wasDeclared())
+							.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue())));
+		}).collect(Collectors.toList()));
 
 		journalToUserHistoryMap.add(journalToUserHistoryMapPre.entrySet().stream()
+				.filter(e -> journalsPre.get(e.getKey())!=null && journalsPre.get(e.getKey()).wasDeclared())
 				.map(entry -> new DataBaseElement<String, Map<String, List<Boolean>>>(entry.getKey(), entry.getValue()))
 				.collect(Collectors.toList()));
 
