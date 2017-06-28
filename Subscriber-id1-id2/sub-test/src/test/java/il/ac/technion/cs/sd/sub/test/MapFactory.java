@@ -29,9 +29,10 @@ public class MapFactory<K, V> implements IStringableFactory<Map<K, List<V>>> {
 	}
 
 	public Map<K, List<V>> createObject(String s) {
-		return Arrays.asList(s.split("/")).stream().filter(o -> !o.equals("")).map(str -> str.split(";", 2))//
-				.filter(ss -> ss.length==2).collect(Collectors.toMap(ss -> keyParser.apply(ss[0])//
-		, ss -> valueListFactory.createObject(ss[1])));
+		return Arrays.asList(s.split("/")).stream().filter(o -> !o.equals(""))//
+				.map(str -> str.split(";", 2)).filter(ss -> ss.length == 2)//
+				.collect(Collectors.toMap(ss -> keyParser.apply(ss[0])//
+						, ss -> valueListFactory.createObject(ss[1])));
 	}
 
 	@Override

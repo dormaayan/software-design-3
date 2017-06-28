@@ -34,7 +34,7 @@ public class ListFactory<T> implements IStringableFactory<List<T>> {
 
 	public String createString(List<T> lst) {
 		return lst.stream().map(t -> serializer.apply(t))//
-				.reduce("", (s1, s2) -> s1 + ";" + s2);
+				.reduce((s1, s2) -> s1 + ";" + s2).orElse("");
 	}
 
 	@Override
