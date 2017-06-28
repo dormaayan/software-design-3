@@ -188,12 +188,6 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 
 	private void initalStructures() {
 
-		// System.out.println("journals:");
-		// System.out.println(journalsPre);
-
-		// System.out.println(journalToUserHistoryMapPre.get("j4").get("u4"));
-		// System.out.println("_____________________________________________");
-
 		journals.add(journalsPre.entrySet().stream().distinct().filter(j -> j.getValue().wasDeclared())
 				.map(entry -> new DataBaseElement<String, JournalInfo>(entry.getKey(), entry.getValue()))
 				.collect(Collectors.toList()));
@@ -213,12 +207,13 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 
 		userToJournalHistoryMap.add(userToJournalHistoryMapPre.entrySet().stream().map(entry -> {
 			return new DataBaseElement<String, Map<String, List<Boolean>>>(entry.getKey(),
-					entry.getValue().entrySet().stream().filter(e -> journalsPre.get(e.getKey())!=null && journalsPre.get(e.getKey()).wasDeclared())
+					entry.getValue().entrySet().stream().filter(
+							e -> journalsPre.get(e.getKey()) != null && journalsPre.get(e.getKey()).wasDeclared())
 							.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue())));
 		}).collect(Collectors.toList()));
 
 		journalToUserHistoryMap.add(journalToUserHistoryMapPre.entrySet().stream()
-				.filter(e -> journalsPre.get(e.getKey())!=null && journalsPre.get(e.getKey()).wasDeclared())
+				.filter(e -> journalsPre.get(e.getKey()) != null && journalsPre.get(e.getKey()).wasDeclared())
 				.map(entry -> new DataBaseElement<String, Map<String, List<Boolean>>>(entry.getKey(), entry.getValue()))
 				.collect(Collectors.toList()));
 
