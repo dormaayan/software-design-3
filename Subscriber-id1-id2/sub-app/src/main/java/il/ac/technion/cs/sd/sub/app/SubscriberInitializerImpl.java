@@ -174,7 +174,7 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 			journalToUserHistoryMapPre.get(journalId).put(userId, new ArrayList<>());
 
 		List<Boolean> history = userToJournalHistoryMapPre.get(userId).get(journalId);
-		if (history.size() != 0 && history.get(history.size() - 1) != false) {
+		if ((history.size() != 0 && history.get(history.size() - 1) != false) || (history.size() == 0) ) {
 			userToJournalHistoryMapPre.get(userId).get(journalId).add(false);
 			journalToUserHistoryMapPre.get(journalId).get(userId).add(false);
 		}
@@ -184,6 +184,9 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 		
 //		System.out.println("journals:");
 //		System.out.println(journalsPre);
+		
+//		System.out.println(journalToUserHistoryMapPre.get("j4").get("u4"));
+//		System.out.println("_____________________________________________");
 
 		
 

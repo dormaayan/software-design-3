@@ -81,7 +81,7 @@ public class SubscriberReaderImpl implements SubscriberReader {
 	public CompletableFuture<Map<String, List<Boolean>>> getAllSubscriptions(String userId) {
 		return userToJournalHistoryMap.findElementByID(userId)//
 				.thenApply(map -> {
-					System.out.println(map);
+					//System.out.println(map);
 					return map.orElse(new HashMap<>());
 				});
 	}

@@ -380,6 +380,7 @@ public class EndToEndTest {
 		setUp("ourSmall.json");
 		SubscriberReader reader = injector.getInstance(SubscriberReader.class);
 		Map<String, List<Boolean>> j4 = reader.getSubscribers("j4").get();
+		//System.out.println(j4.get("u4"));
 		assertThat(j4.entrySet(), hasSize(1));
 		assertThat(j4.get("u4"), IsIterableContainingInOrder.contains(false));
 	}
