@@ -68,7 +68,7 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 
 		}
 		initalStructures();
-		return null;
+		return CompletableFuture.completedFuture(null);
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 				}
 			}
 			initalStructures();
-			return null;
+			return CompletableFuture.completedFuture(null);
 		} catch (Exception e) {
 			throw new RuntimeException();
 		}

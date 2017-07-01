@@ -26,12 +26,6 @@ import library.SuccecefulLineStorage;
 
 public class FakeSubscriberModule extends AbstractModule {
 	
-//	private static IDatabase<String, List<JournalRegistration>> userToJournals;
-//	private static IDatabase<String, JournalInfo> journals;
-//	private static IDatabase<String, Map<String, List<Boolean>>> userToJournalHistoryMap;
-//	private static IDatabase<String, Map<String, List<Boolean>>> journalToUserHistoryMap;
-
-	
 	@Override
 	protected void configure() {
 		bind(SubscriberInitializer.class).to(SubscriberInitializerImpl.class);
