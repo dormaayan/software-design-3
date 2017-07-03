@@ -1,4 +1,4 @@
-package il.ac.technion.cs.sd.sub.test;
+package library;
 
 import com.google.inject.AbstractModule;
 

@@ -5,6 +5,8 @@ import com.google.inject.Injector;
 import il.ac.technion.cs.sd.sub.app.SubscriberInitializer;
 import il.ac.technion.cs.sd.sub.app.SubscriberReader;
 import il.ac.technion.cs.sd.sub.ext.LineStorageModule;
+import library.FakeLineStorageMoudle;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;

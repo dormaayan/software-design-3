@@ -14,8 +14,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import il.ac.technion.cs.sd.sub.app.SubscriberInitializer;
-import il.ac.technion.cs.sd.sub.app.SubscriberInitializerImpl;
 import il.ac.technion.cs.sd.sub.app.SubscriberReader;
+import library.FakeLineStorageMoudle;
 
 public class SubscriberReaderTest {
 
