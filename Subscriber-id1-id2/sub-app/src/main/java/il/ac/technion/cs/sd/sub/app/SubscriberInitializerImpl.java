@@ -219,4 +219,23 @@ public class SubscriberInitializerImpl implements SubscriberInitializer {
 
 	}
 
+	/***************************
+	 * For Testing only !
+	 ***************************/
+	public Map<String, Map<String, JournalRegistration>> getUserToJournalsPre() {
+		return userToJournalsPre;
+	}
+
+	public Map<String, JournalInfo> getJournalsPre() {
+		return journalsPre;
+	}
+
+	public Map<String, Map<String, List<Boolean>>> getUserToJournalHistoryMapPre() {
+		return userToJournalHistoryMapPre;
+	}
+
+	public Map<String, Map<String, List<Boolean>>> getJournalToUserHistoryMapPre() {
+		return journalToUserHistoryMapPre;
+	}
+
 }
