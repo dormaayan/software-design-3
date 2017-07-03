@@ -11,7 +11,7 @@ import il.ac.technion.cs.sd.sub.ext.FutureLineStorageFactory;
 
 public class TestStorerFactory implements FutureLineStorageFactory {
 
-	private static final Map<String, TestStorer> store = new HashMap<>();
+	private final Map<String, TestStorer> store = new HashMap<>();
 	private final Random rand = new Random();
 
 	@Override

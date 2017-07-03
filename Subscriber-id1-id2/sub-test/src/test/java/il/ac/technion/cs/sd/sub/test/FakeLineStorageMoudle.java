@@ -10,8 +10,7 @@ public class FakeLineStorageMoudle extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(FutureLineStorage.class).to(TestStorer.class);
-		bind(FutureLineStorageFactory.class).to(TestStorerFactory.class);
+		bind(FutureLineStorageFactory.class).toInstance(new TestStorerFactory());
 	}
-
 
 }
