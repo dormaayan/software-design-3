@@ -93,28 +93,26 @@ public class SubscriberReaderTest {
 		SubscriberReader reader = injector.getInstance(SubscriberReader.class);
 		assertEquals(reader.getSubscribedJournals("foo123").get(), Arrays.asList());
 	}
-	
 
 	@Test
 	public void testJson3() throws Exception {
-		Injector injector = setupAndGetInjector("small.csv");
+		Injector injector = setupAndGetInjector("small.json");
 		SubscriberReader reader = injector.getInstance(SubscriberReader.class);
-		assertEquals(reader.getMonthlyBudget("bar1234").get().getAsInt(), 100);
+		assert (!reader.getMonthlyBudget("bar1234").get().isPresent());
 	}
 
 	@Test
 	public void testJson4() throws Exception {
-		Injector injector = setupAndGetInjector("small.csv");
+		Injector injector = setupAndGetInjector("small.json");
 		SubscriberReader reader = injector.getInstance(SubscriberReader.class);
-		assertEquals(reader.getSubscribedJournals("bar1234").get(), Arrays.asList("foo1234"));
+		assertEquals(reader.getMonthlyBudget("foo1234").get().getAsInt(), 100);
 	}
 
 	@Test
 	public void testJson5() throws Exception {
-		Injector injector = setupAndGetInjector("small.csv");
+		Injector injector = setupAndGetInjector("small.json");
 		SubscriberReader reader = injector.getInstance(SubscriberReader.class);
-		assertEquals(reader.getAllSubscriptions("bar1234").get().get("foo1234"), Arrays.asList(true));
+		assertEquals(reader.getMonthlyIncome("foo1234").get().getAsInt(), 100);
 	}
-
 
 }
