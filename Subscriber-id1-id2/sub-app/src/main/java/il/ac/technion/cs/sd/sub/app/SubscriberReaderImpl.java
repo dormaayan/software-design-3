@@ -74,7 +74,7 @@ public class SubscriberReaderImpl implements SubscriberReader {
 	@Override
 	public CompletableFuture<List<String>> getSubscribedJournals(String userId) {
 		return getSubscritions(userId).thenApply(o -> o.orElse(new ArrayList<>()).stream()//
-				.map(jr -> jr.getJournalID()).collect(Collectors.toList()));
+				.map(jr -> jr.getJournalID()).sorted().collect(Collectors.toList()));
 	}
 
 	@Override
