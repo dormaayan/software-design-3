@@ -15,7 +15,7 @@ public class SuccecefulLineStorage {
 	}
 
 	public CompletableFuture<Void> appendLine(String line) {
-		return store.appendLine(line).thenCompose(b -> b ? null : appendLine(line));
+		return store.appendLine(line).thenCompose(b -> b ? CompletableFuture.completedFuture(null) : appendLine(line));
 	}
 
 	public CompletableFuture<String> read(int i) {
