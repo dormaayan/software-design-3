@@ -84,15 +84,15 @@ public class Database<Key extends Comparable<Key>, Value> implements IDatabase<K
 	 */
 	private void addElement(IDatabaseElement<Key, Value> element) {
 		try {
-			lineStorageKeys.appendLine(keyFactory.createString(CompletableFuture.completedFuture(element.getKey())).get());
+			lineStorageKeys.appendLine(keyFactory.createString(CompletableFuture.completedFuture(element.getKey())).get()).get();
 		} catch (InterruptedException | ExecutionException e) {
-			throw new RuntimeException();
+			throw new RuntimeException(e);
 		}
 		
 		try {
-			lineStorageValues.appendLine(valueFactory.createString(CompletableFuture.completedFuture(element.getValue())).get());
+			lineStorageValues.appendLine(valueFactory.createString(CompletableFuture.completedFuture(element.getValue())).get()).get();
 		} catch (InterruptedException | ExecutionException e) {
-			throw new RuntimeException();
+			throw new RuntimeException(e);
 		}
 	}
 	
